@@ -1,6 +1,7 @@
 const express=require("express")
 const { addTodo, updateTodo } = require("./types")
 const { todos } = require("./db")
+const mongoose=require("mongoose")
 
 const cors=require("cors")
 
@@ -40,10 +41,12 @@ app.put("/updateTodos",async function(req,res){
         res.json({
             "msg":data.error.errors
         })
+        return;
     }
-    console.log("data good")
-    await todos.update({
-        _id:id //mongodb automatically creates _id uniquely to all objects created
+    console.log("data good" + id)
+    
+    await todos.findOneAndUpdate({
+        _id:id,
     },{
         completed:true
     })

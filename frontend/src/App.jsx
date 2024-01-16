@@ -1,23 +1,26 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CreateTodo } from "./components/CreateTodo"
-import { Todos } from "./components/todos"
+import { Todos } from "./components/Todos"
+import { fetchData } from "./components/GetTodos"
+
 
 
 function App(){
   const [todos,setTodos]=useState([])
-
-  fetch("http://localhost:3000/getTodos")
-    .then(async function(res){
-      const json=await res.json();
-      setTodos(json.tasks)
-      console.log(json.tasks)
-    })
+useEffect(()=>{
+    const getAllTodos=async ()=>{
+    const tasks=await fetchData();
+    console.log(tasks)
+    setTodos(tasks)
+    }
+    getAllTodos();
+  },[])
   return (
     <>
-      <CreateTodo></CreateTodo>
-      <Todos todos={todos}></Todos>
+      <CreateTodo setTodos={setTodos}></CreateTodo>
+      <Todos todos={todos} updateTasks={setTodos}></Todos>
     </>
   )
 }
 
-export default App
+export default App;
